@@ -1,0 +1,65 @@
+{
+  "name": "nc-toolkits",
+  "version": "1.0.0",
+  "description": "A tool for building dynamic form with json configs",
+  "author": "canhdinh2302",
+  "license": "MIT",
+  "repository": "nc_labs/nc-toolkits",
+  "main": "dist/index.js",
+  "module": "dist/index.modern.js",
+  "source": "src/index.tsx",
+  "scripts": {
+    "build": "microbundle-crl --compress --format modern,cjs",
+    "start": "microbundle-crl watch --compress --format modern,cjs",
+    "prepare": "husky install",
+    "lint": "eslint './src/**/*.{ts,tsx}' --fix"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.192",
+    "@types/node": "^18.13.0",
+    "@types/react": "^18.0.28",
+    "@types/styled-components": "^5.1.26",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-config-standard-react": "^13.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.2",
+    "microbundle-crl": "^0.13.11",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.4",
+    "react": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "typescript": "^4.9.5"
+  },
+  "files": [
+    "dist"
+  ],
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json}": [
+      "yarn lint"
+    ]
+  },
+  "dependencies": {
+    "ahooks": "^3.7.6",
+    "history": "^5.3.0",
+    "lodash": "^4.17.21",
+    "nc-lazy": "nc-labs/nc-atoms#nc-lazy",
+    "react-router-dom": "^6.10.0",
+    "styled-components": "^5.3.9"
+  }
+}
