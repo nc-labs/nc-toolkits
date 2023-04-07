@@ -14,7 +14,7 @@ type T_RouterProvider = React.NamedExoticComponent<{
   fallback?: React.ReactNode
 }>
 
-const LayoutProvider: T_RouterProvider = React.memo(({ fallback }) => {
+const Router: T_RouterProvider = React.memo(({ fallback }) => {
   const pathname = history.location.pathname
   const [layout, setLayout] = useState<Record<string, T_LayoutOptions>>({})
   const configs = useMemo(() => layout[pathname], [layout, pathname])
@@ -59,4 +59,4 @@ const LayoutProvider: T_RouterProvider = React.memo(({ fallback }) => {
   )
 })
 
-export { LayoutProvider }
+export { Router }
