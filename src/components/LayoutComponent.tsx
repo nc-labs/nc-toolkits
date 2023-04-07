@@ -1,23 +1,26 @@
 import React, { PropsWithChildren, useMemo } from 'react'
-import { getLayoutComponet } from '../utils/getLayoutComponet'
+import { Factory } from '../utils/Factory'
+import { getLayoutCollections } from '../utils/getLayoutCollections'
+import { LazyComponent } from './LazyCompoent'
 
 const layouts = {
-  headers: getLayoutComponet('headers'),
-  footers: getLayoutComponet('footers'),
-  contents: getLayoutComponet('contents'),
+  headers: getLayoutCollections('headers'),
+  footers: getLayoutCollections('footers'),
+  contents: getLayoutCollections('contents'),
 }
 
 const LayoutComponent: React.FC<
   PropsWithChildren<{ component: 'headers' | 'footers' | 'contents'; name: string }>
 > = React.memo(({ name, children, component }) => {
-  const Render = useMemo(() => {
-    if (name === 'none') return React.Fragment
+  const factory: Factory | null = useMemo(() => {
+    const collections = layouts[component]
+    if (name === 'none' || !collections) return null
 
-    const collections: Record<string, any> = layouts[component]
-    return collections[name] || collections['index'] || React.Fragment
+    return collections[name] || collections['index'] || null
   }, [component, name])
 
-  return <Render>{children}</Render>
+  if (!factory) return <React.Fragment>{children}</React.Fragment>
+  return <LazyComponent factory={factory}>{children}</LazyComponent>
 })
 
 export { LayoutComponent }

@@ -1,15 +1,14 @@
-import React from 'react';
-import { T_Factory } from './lazy';
-declare const getRoutes: (lazyFunction?: ((factory: any) => React.LazyExoticComponent<any>) | undefined) => {
+import { Factory } from './Factory';
+declare const getRoutes: () => {
     routes: Pick<{
         path: string;
+        factory: Factory;
         element: JSX.Element;
-        preload: T_Factory;
     }, "path" | "element">[];
     routePreloads: Pick<{
         path: string;
+        factory: Factory;
         element: JSX.Element;
-        preload: T_Factory;
-    }, "path" | "preload">[];
+    }, "path" | "factory">[];
 };
 export { getRoutes };

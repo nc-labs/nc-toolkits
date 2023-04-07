@@ -1,14 +1,13 @@
 import React, { Suspense, useMemo, useState } from 'react'
-import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
+import { unstable_HistoryRouter as HistoryRouter, useRoutes } from 'react-router-dom'
+import styled from 'styled-components'
 import { CUSTOM_EVENTS } from '../constants/customEvents'
 import { T_LayoutOptions } from '../hocs/withLayout'
 import { useHeight } from '../hooks/useHeight'
 import { watcher } from '../hooks/useWatcher'
+import { routes } from '../routes'
 import { history } from '../utils/history'
-import { Header } from './Header'
 import { LayoutComponent } from './LayoutComponent'
-import { Main } from './Main'
-import { Routes } from './Routes'
 
 type T_RouterProvider = React.NamedExoticComponent<{
   fallback?: React.ReactNode
@@ -60,3 +59,23 @@ const Router: T_RouterProvider = React.memo(({ fallback }) => {
 })
 
 export { Router }
+
+const Main = styled.main`
+  min-height: ${({
+    headerHeight = 0,
+    footerHeight = 0,
+  }: {
+    headerHeight?: number
+    footerHeight?: number
+  }) => `calc(100vh - ${headerHeight + footerHeight}px)`};
+`
+
+const Header = styled.header`
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: white;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+`
+
+const Routes = React.memo(() => useRoutes(routes))

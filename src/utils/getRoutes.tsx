@@ -1,13 +1,15 @@
 import React from 'react'
 import _ from 'lodash'
-import { T_Factory, lazy } from './lazy'
+import { LazyComponent } from '../components/LazyCompoent'
+import { Factory } from './Factory'
+import { T_Factory } from './lazy'
 
 // TODO xử lý trường hợp 2 slug trùng tên
-const getRoutes = (lazyFunction?: (factory: any) => React.LazyExoticComponent<any>) => {
+const getRoutes = () => {
   // @ts-expect-error
   const importedRoutes: Record<string, T_Factory> = import.meta.glob('/src/pages/**/[a-z[]*.tsx')
   const output = []
-  const lazyFunc = lazyFunction || lazy
+  // const lazyFunc = lazyFunction || lazy
 
   for (const key in importedRoutes) {
     const pathWithSlugRegex = /^(\/[a-z][^\]/\s]*|\/\[[a-z][^/\s]*\])+$|^\/$/g
@@ -23,20 +25,18 @@ const getRoutes = (lazyFunction?: (factory: any) => React.LazyExoticComponent<an
     } // không tạo route nếu không đúng định dạng
 
     path = path.split(/\]/).join('').split(/\/\[/).join('/:') // thay thees /[slug] thành /:slug
+    const factory = new Factory(importedRoutes[key])
 
     output.push({
       path,
-      element: (() => {
-        const Render = lazyFunc(importedRoutes[key])
-        return <Render />
-      })(),
-      preload: importedRoutes[key],
+      factory,
+      element: <LazyComponent factory={factory} />,
     })
   }
 
   return {
     routes: output.map((o) => _.pick(o, ['path', 'element'])),
-    routePreloads: output.map((o) => _.pick(o, ['path', 'preload'])),
+    routePreloads: output.map((o) => _.pick(o, ['path', 'factory'])),
   }
 }
 

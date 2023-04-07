@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useInViewport } from 'ahooks'
 import { matchPath, Link as DefaultLink } from 'react-router-dom'
-import { T_Factory } from '../utils/lazy'
-import { routePreloads } from './Routes'
+import { routePreloads } from '../routes'
 
 const Link: typeof DefaultLink = React.memo(
   React.forwardRef((props, forwardedRef) => {
@@ -15,19 +14,17 @@ const Link: typeof DefaultLink = React.memo(
       [JSON.stringify(props.to)]
     )
 
-    type T_PreloadFn = T_Factory | undefined
-    const preloadFn: T_PreloadFn = useMemo(
-      () => routePreloads.find((r) => matchPath(r.path, targetPath))?.preload,
+    const currentRoute = useMemo(
+      () => routePreloads.find((r) => matchPath(r.path, targetPath)),
       [targetPath]
     )
 
     useEffect(() => {
       if (!inViewport) return // không thực hiện nếu link chưa hiển thị trên màn hình
-      if (!preloadFn) return // không thực hiện nếu không có preloadFn
-      if (preloadFn.isPreloaded) return // không thực hiện gì nếu đã được preload
+      if (!currentRoute || !currentRoute.factory) return // không thực hiện nếu không tìm được route
+      if (currentRoute.factory.isFetched) return // không thực hiện gì nếu đã được preload
 
-      preloadFn()
-      preloadFn.isPreloaded = true
+      currentRoute.factory.fetch()
     }, [inViewport])
 
     return <DefaultLink {...props} ref={ref} />
