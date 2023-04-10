@@ -6,11 +6,10 @@ class Factory {
   factory: T_Factory
   isFetched: boolean = false
   Component: React.FC<any> = Loading
-  path: string
+  error: string = ''
 
-  constructor(factory: T_Factory, path?: string) {
+  constructor(factory: T_Factory) {
     this.factory = factory
-    this.path = path || ''
   }
 
   fetch = async () => {
@@ -21,14 +20,14 @@ class Factory {
         const { default: Component } = await this.factory()
         this.Component = Component
         this.isFetched = true
+        this.error = ''
         break // nếu fetch thành công thì done luôn không cần thử lại
       } catch (e) {
-        if (index === maxTryTimes - 1) {
-          // đây là lần fetch cuối cùng, tức là 3 lần liên tiếp fetch bị lỗi
-          // TODO viết 1 component thông báo lỗi chunk load và không cố gắng fetch lại
-        }
+        if (index !== maxTryTimes - 1) continue // nếu chưa phải lần fetch cuối cùng thì không làm gì cả, để vòng for tự tăng và thử load lại lần nữa
 
-        // nếu chưa phải lần fetch cuối cùng thì không làm gì cả, để vòng for tự tăng và thử load lại lần nữa
+        // đây là lần fetch cuối cùng, tức là 3 lần liên tiếp fetch bị lỗi
+        console.error('[nc-toolkits]', e.message)
+        this.error = e.message
       }
     }
   }

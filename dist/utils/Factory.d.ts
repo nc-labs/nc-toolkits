@@ -4,8 +4,8 @@ declare class Factory {
     factory: T_Factory;
     isFetched: boolean;
     Component: React.FC<any>;
-    path: string;
-    constructor(factory: T_Factory, path?: string);
+    error: string;
+    constructor(factory: T_Factory);
     fetch: () => Promise<void>;
 }
 export { Factory };

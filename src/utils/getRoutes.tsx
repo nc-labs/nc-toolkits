@@ -2,30 +2,27 @@ import React from 'react'
 import _ from 'lodash'
 import { LazyComponent } from '../components/LazyCompoent'
 import { Factory } from './Factory'
-import { T_Factory } from './lazy'
+import { importGlob } from './importGlob'
+
+const pathConvert = (path: string) => ['/', path.replace(/index$/, '').toLowerCase()].join('')
+const slugConvert = (path: string) => path.split(/\]/).join('').split(/\/\[/).join('/:') // thay thees /[slug] thành /:slug
 
 // TODO xử lý trường hợp 2 slug trùng tên
 const getRoutes = () => {
-  // @ts-expect-error
-  const importedRoutes: Record<string, T_Factory> = import.meta.glob('/src/pages/**/[a-z[]*.tsx')
+  const importedPages = importGlob('/src/pages')
   const output = []
-  // const lazyFunc = lazyFunction || lazy
 
-  for (const key in importedRoutes) {
+  for (const pagePath in importedPages) {
     const pathWithSlugRegex = /^(\/[a-z][^\]/\s]*|\/\[[a-z][^/\s]*\])+$|^\/$/g
-    let path =
-      key
-        .split(/\/src\/pages|\.tsx$|\/index\.tsx$/g)
-        .join('')
-        .toLowerCase() || '/'
+    let path = pathConvert(pagePath)
 
     if (!pathWithSlugRegex.test(path)) {
-      console.warn('[nc-toolkits]', key, 'is invalid path.')
+      console.warn('[nc-toolkits]', pagePath, 'is invalid path.')
       continue
     } // không tạo route nếu không đúng định dạng
 
-    path = path.split(/\]/).join('').split(/\/\[/).join('/:') // thay thees /[slug] thành /:slug
-    const factory = new Factory(importedRoutes[key])
+    path = slugConvert(path)
+    const factory = new Factory(importedPages[pagePath])
 
     output.push({
       path,

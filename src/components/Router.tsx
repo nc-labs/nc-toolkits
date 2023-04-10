@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { unstable_HistoryRouter as HistoryRouter, useRoutes } from 'react-router-dom'
 import styled from 'styled-components'
 import { CUSTOM_EVENTS } from '../constants/customEvents'
@@ -13,7 +13,7 @@ type T_RouterProvider = React.NamedExoticComponent<{
   fallback?: React.ReactNode
 }>
 
-const Router: T_RouterProvider = React.memo(({ fallback }) => {
+const Router: T_RouterProvider = React.memo(() => {
   const pathname = history.location.pathname
   const [layout, setLayout] = useState<Record<string, T_LayoutOptions>>({})
   const configs = useMemo(() => layout[pathname], [layout, pathname])
@@ -27,33 +27,33 @@ const Router: T_RouterProvider = React.memo(({ fallback }) => {
   return (
     // @ts-expect-error
     <HistoryRouter history={history}>
-      <Suspense fallback={fallback}>
-        {configs?.header && (
-          <Header ref={headerRef}>
-            <LayoutComponent component="headers" name={configs.header} />
-          </Header>
-        )}
+      {/* <Suspense fallback={fallback}> */}
+      {configs?.header && (
+        <Header ref={headerRef}>
+          <LayoutComponent component="headers" name={configs.header} />
+        </Header>
+      )}
 
-        {configs?.content && (
-          <Main headerHeight={headerHeight} footerHeight={footerHeight}>
-            <LayoutComponent component="contents" name={configs?.content}>
-              <Routes />
-            </LayoutComponent>
-          </Main>
-        )}
-
-        {Boolean(configs?.content) || (
-          <main>
+      {configs?.content && (
+        <Main headerHeight={headerHeight} footerHeight={footerHeight}>
+          <LayoutComponent component="contents" name={configs?.content}>
             <Routes />
-          </main>
-        )}
+          </LayoutComponent>
+        </Main>
+      )}
 
-        {configs?.footer && (
-          <footer ref={footerRef}>
-            <LayoutComponent component="footers" name={configs?.footer} />
-          </footer>
-        )}
-      </Suspense>
+      {Boolean(configs?.content) || (
+        <main>
+          <Routes />
+        </main>
+      )}
+
+      {configs?.footer && (
+        <footer ref={footerRef}>
+          <LayoutComponent component="footers" name={configs?.footer} />
+        </footer>
+      )}
+      {/* </Suspense> */}
     </HistoryRouter>
   )
 })

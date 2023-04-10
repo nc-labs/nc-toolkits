@@ -1,18 +1,24 @@
-import React, { useEffect } from 'react'
-import { useUpdate } from 'ahooks'
+import React, { useCallback, useLayoutEffect } from 'react'
+import { useBoolean } from 'ahooks'
 import { delay } from '../utils/delay'
 import { Factory } from '../utils/Factory'
+import { ChunkLoadError } from './ChunkLoadError'
+import { Loading } from './Loading'
 
 const LazyComponent: React.FC<React.PropsWithChildren<{ factory: Factory }>> = React.memo(
   ({ factory, children }) => {
-    const reRender = useUpdate()
+    const [isLoading, { setTrue: onLoading, setFalse: offLoading }] = useBoolean(!factory.isFetched)
 
-    useEffect(() => {
+    const fetch = useCallback(() => {
       if (factory.isFetched) return
 
-      Promise.all([delay(), factory.fetch()]).then(() => reRender())
-    }, [])
+      onLoading()
+      Promise.all([delay(), factory.fetch()]).finally(offLoading)
+    }, [factory.isFetched])
 
+    useLayoutEffect(fetch, [factory.isFetched])
+    if (isLoading) return <Loading />
+    if (factory.error) return <ChunkLoadError error={factory.error} onReload={fetch} />
     return <factory.Component>{children}</factory.Component>
   }
 )
