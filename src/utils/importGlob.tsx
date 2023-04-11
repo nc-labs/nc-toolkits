@@ -2,10 +2,13 @@ import _ from 'lodash'
 import { T_Factory } from './lazy'
 
 const importGlob = (basePath: string) => {
-  // @ts-expect-error
-  const data = _.pickBy(import.meta.glob('/src/{layouts,pages}/**/*.tsx'), function (__val, key) {
-    return _.startsWith(key, basePath)
-  })
+  const data = _.pickBy(
+    // @ts-expect-error
+    import.meta.glob('/src/{layouts,pages}/**/*.tsx'),
+    function (__val, key) {
+      return _.startsWith(key, basePath)
+    }
+  )
 
   const output: Record<string, T_Factory> = {}
 
@@ -15,7 +18,7 @@ const importGlob = (basePath: string) => {
       .replace(/\.tsx$/, '')
       .replace(/^\//, '')
 
-    output[baseName] = () => import(`${key}?t=${Date.now()}`)
+    output[baseName] = data[key]
   }
 
   return output
