@@ -1,5 +1,0 @@
-const CUSTOM_EVENTS = {
-  'CHANGE_LAYOUTS': 'CHANGE_LAYOUTS',
-}
-
-export { CUSTOM_EVENTS }

@@ -1,6 +1,5 @@
 export * from 'react-router-dom';
-export { withLayout } from './hocs/withLayout';
+export { withNcLayout } from './hocs/withNcLayout';
 export { history } from './utils/history';
-export { watcher } from './hooks/useWatcher';
 export { Link } from './components/Link';
-export { Router } from './components/Router';
+export { HistoryRouter } from './components/HistoryRouter';

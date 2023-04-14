@@ -1,13 +1,16 @@
 import React from 'react';
-import { T_Factory } from './lazy';
+declare type T_FactoryReturn = () => Promise<{
+    default: React.FC<any> & {
+        factories?: Factory[];
+    };
+}>;
 declare class Factory {
-    #private;
-    factory: T_Factory;
+    factory: T_FactoryReturn;
     isFetched: boolean;
     Component: React.FC<any>;
     error: string;
-    constructor(factory: T_Factory);
+    constructor(factory: T_FactoryReturn);
     fetch: () => Promise<void>;
-    private get _factory();
 }
 export { Factory };
+export type { T_FactoryReturn };

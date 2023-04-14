@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { T_Factory } from './lazy'
+import { T_FactoryReturn } from './Factory'
 
 const importGlob = (basePath: string) => {
   const data = _.pickBy(
@@ -10,7 +10,7 @@ const importGlob = (basePath: string) => {
     }
   )
 
-  const output: Record<string, T_Factory> = {}
+  const output: Record<string, T_FactoryReturn> = {}
 
   for (const key in data) {
     const baseName = key

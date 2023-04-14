@@ -1,9 +1,10 @@
 import React, { useCallback, useLayoutEffect } from 'react'
 import { useBoolean } from 'ahooks'
-import { delay } from '../utils/delay'
 import { Factory } from '../utils/Factory'
 import { ChunkLoadError } from './ChunkLoadError'
 import { Loading } from './Loading'
+
+const delay = (ms?: number) => new Promise((resolve) => setTimeout(resolve, ms || 1000))
 
 const LazyComponent: React.FC<React.PropsWithChildren<{ factory: Factory }>> = React.memo(
   ({ factory, children }) => {
@@ -17,6 +18,7 @@ const LazyComponent: React.FC<React.PropsWithChildren<{ factory: Factory }>> = R
     }, [factory.isFetched])
 
     useLayoutEffect(fetch, [factory.isFetched])
+
     if (isLoading) return <Loading />
     if (factory.error) return <ChunkLoadError error={factory.error} onReload={fetch} />
     return <factory.Component>{children}</factory.Component>

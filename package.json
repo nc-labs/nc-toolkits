@@ -9,8 +9,8 @@
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",
   "scripts": {
-    "build": "microbundle-crl --compress --format modern,cjs",
-    "start": "microbundle-crl watch --compress --format modern,cjs",
+    "build": "microbundle-crl --compress --format modern,cjs --comments '/@vite/'",
+    "start": "microbundle-crl watch --compress --format modern,cjs --comments '/@vite/'",
     "prepare": "husky install",
     "lint": "eslint './src/**/*.{ts,tsx}' --fix"
   },
